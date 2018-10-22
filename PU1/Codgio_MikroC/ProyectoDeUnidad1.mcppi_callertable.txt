@@ -1,0 +1,13 @@
+main
+	__CC2DW
+	configurar
+interrupt_low
+interrupt
+	ApagarLeds
+	ElegirProceso
+		EncenderApagar
+		ApagarLeds
+		BasculacionConIncremento
+		CorrimientoDeLedsDeIzquierdaADerecha
+		ContadorAutomaticoHasta20
+		CorrimientoImparRegresoPar
