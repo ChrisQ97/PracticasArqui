@@ -1,0 +1,158 @@
+MPASM 5.81  /HOME/CHR/MPLABXPROJECTS/PRUEBAP   10-23-2018  4:09:49         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (list)
+                      00001 list p = 18f4550
+Error[105]  : Cannot open file (Include File "p18f4550.ASM" not found)
+                      00002 #include <p18f4550>
+                      00003     org             0x00
+000000 EF?? F???      00004     goto            inicio
+                      00005     org             0x20
+Warning[207]: Found label after column 1. (contador)
+  00000000            00006     contador        EQU 0x00
+Warning[207]: Found label after column 1. (continuar)
+  00000000            00007     continuar       EQU 0x00
+000020                00008 inicio:
+                      00009    ;configurar
+Error[113]  : Symbol not previously defined (TRISD)
+000020 6A00           00010     clrf            TRISD   ;TRISD =   0;                         // Ponemos el puerto D como salida
+Error[113]  : Symbol not previously defined (PORTD)
+000022 6A00           00011     clrf            PORTD   ;PORTD =   0;                         // Inicializamos el puerto D
+                      00012 
+                      00013                             ; //CONFIGURACION DEL TIMER 1:
+                      00014 
+                      00015                             ; TMR1H = 0x22;                        // Valor inicial de TMR1
+000024 0E22           00016     MOVLW           0x22
+Error[113]  : Symbol not previously defined (TMR1H)
+000026 6E00           00017     MOVWF           TMR1H
+Error[113]  : Symbol not previously defined (TMR1L)
+000028 6A00           00018     clrf            TMR1L   ; TMR1L = 0x00;
+                      00019                             ;cs es la posicion 1 del byte
+Error[113]  : Symbol not previously defined (TMR1)
+00002A 9200           00020     BCF             TMR1, 1 ; TMR1CS_bit = 0;                      // Utilizamos el contador interno y n
+                            o uno externo
+                      00021                             ; T1CKPS1_bit = T1CKPS0_bit = 1;       // Asignamos una escala de 1:8 ponien
+                            do como 1 el bit 5 y 4 de T1CON
+Error[113]  : Symbol not previously defined (TMR1)
+00002C 8800           00022     BSF             TMR1, 4
+Error[113]  : Symbol not previously defined (TMR1)
+00002E 8A00           00023     BSF             TMR1, 5
+                      00024     
+                      00025                             ; TMR1IE_bit = 1;                      // Habilitamos la interrupcion por OV
+                            ERFLOW del TMR1
+Error[113]  : Symbol not previously defined (PIE1)
+000030 8000           00026     BSF             PIE1,0
+                      00027                             ; INTCON = 0xC0;                       // Habilitamos todas las interrupcion
+                            es unmasked en el bit 7 y las interrupciones unmasked perifericas en el bit 6
+000032 0EC0           00028     MOVLW           0xC0
+Error[113]  : Symbol not previously defined (INTCON)
+000034 6E00           00029     MOVWF           INTCON                           
+                      00030                             ; TMR1ON_bit = 1;    
+Error[113]  : Symbol not previously defined (TMR1)
+000036 8000           00031     BSF             TMR1,0 
+000038                00032 interrupt:
+                      00033                             ;TMR1ON_bit = 0;                      // Apagamos el timer de TMR1
+Error[113]  : Symbol not previously defined (TMR1)
+000038 9000           00034     BCF             TMR1, 0     
+MPASM 5.81  /HOME/CHR/MPLABXPROJECTS/PRUEBAP   10-23-2018  4:09:49         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00035                             ;TMR1IF_bit = 0;                      // Apagamos la bandera de interrupcion
+                             por Overflow de TMR1
+Error[113]  : Symbol not previously defined (PIE1)
+00003A 9000           00036     BCF             PIE1,0
+                      00037                             ;TMR1L = 0x00;
+Error[113]  : Symbol not previously defined (TMR1L)
+00003C 6A00           00038     clrf            TMR1L
+                      00039                             ;TMR1H = 0x00;                        // Reiniciamos el valor de TMR1
+Error[113]  : Symbol not previously defined (TMR1H)
+00003E 6A00           00040     clrf            TMR1H                   
+                      00041                             ;continuar = 1;   
+000040 0E00           00042     MOVLW           0x00
+000042 6E00           00043     MOVWF           continuar
+                      00044     
+                      00045     
+000044                00046 encenderApagar:
+                      00047     
+                      00048     ; if(contador<255)
+                      00049     ; { contador++;}
+                      00050     ; else{contador = 0;}
+                      00051     
+                      00052       ;me falta esto del if y ver ests movimientos del contador
+                      00053       
+                      00054     ;  PORTD=contador;
+                      00055   
+                      00056     
+000044 0E00           00057     MOVLW           contador
+Error[113]  : Symbol not previously defined (PORTD)
+000046 6E00           00058     MOVWF           PORTD
+                      00059     ; continuar = 0;                       // Inicializamos la variable continuar
+000048 0E00           00060     MOVLW           0x00
+00004A 6E00           00061     MOVWF           0x00
+                      00062     
+                      00063     ; TMR1ON_bit = 1;                      // Encendemos el timer de TMR1
+Error[113]  : Symbol not previously defined (TMR1)
+00004C 8000           00064     BSF             TMR1, 0
+                      00065     
+                      00066     
+                      00067     ; me falta este while
+                      00068     
+                      00069     ; while (continuar == 0);              // Esperamos el retraso de 1 segundo
+                      00070     
+                      00071     ; RD0_bit = 0;                         // Apagamos el led
+00004E 0E00           00072     MOVLW           0x00
+Error[113]  : Symbol not previously defined (PORTD)
+000050 6E00           00073     MOVWF           PORTD
+                      00074     ; continuar = 0;                       // Reinicializamos la variable continuar
+000052 0E00           00075     MOVLW           0x00
+Error[113]  : Symbol not previously defined (PORTD)
+000054 6E00           00076     MOVWF           PORTD
+                      00077     
+                      00078     
+Error[128]  : Missing argument(s)
+MPASM 5.81  /HOME/CHR/MPLABXPROJECTS/PRUEBAP   10-23-2018  4:09:49         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00079     BSF; TMR1ON_bit = 1;                      // Encendemos el timer de TMR1
+                      00080     ; while (continuar == 0);  
+                      00081     
+                      00082     
+                      00083     
+000056                00084 main:
+                      00085     
+                      00086   
+                      00087      ;configurar();
+                      00088      ;while(1)
+                      00089      ;{
+                      00090      ;     encenderApagar();
+                      00091      ;}
+Warning[205]: Found directive in column 1. (end)
+                      00092 end
+MPASM 5.81  /HOME/CHR/MPLABXPROJECTS/PRUEBAP   10-23-2018  4:09:49         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__18F4550                         00000001
+contador                          00000000
+continuar                         00000000
+encenderApagar                    00000044
+inicio                            00000020
+interrupt                         00000038
+main                              00000056
+
+Errors   :    20
+Warnings :     4 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
